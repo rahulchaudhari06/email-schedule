@@ -1,0 +1,2 @@
+EMAIL_ADDRESS =  max5943q@gmail.com
+EMAIL_PASSWORD = lzso xoiu ngrw zsia
