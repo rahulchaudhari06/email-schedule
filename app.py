@@ -12,14 +12,16 @@ CORS(app)
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 EMAIL_ADDRESS = "max5943q@gmail.com"
-EMAIL_PASSWORD = "lzso xoiu ngrw zsia"
+EMAIL_PASSWORD = "//Password here"
 
 
 scheduled_emails = []
-email_id_counter = 1  
+email_id_counter = 1
 
 from threading import Lock
+
 emails_lock = Lock()
+
 
 def send_email(to_email, subject, body, email_id):
     try:
@@ -36,7 +38,6 @@ def send_email(to_email, subject, body, email_id):
         server.quit()
         print(f"Email sent to {to_email}")
 
-        
         with emails_lock:
             for email in scheduled_emails:
                 if email["id"] == email_id:
@@ -45,9 +46,13 @@ def send_email(to_email, subject, body, email_id):
     except Exception as e:
         print(f"Failed to send email: {e}")
 
+
 def schedule_email(to_email, subject, body, schedule_time, email_id):
-    schedule.every().day.at(schedule_time).do(send_email, to_email, subject, body, email_id)
+    schedule.every().day.at(schedule_time).do(
+        send_email, to_email, subject, body, email_id
+    )
     print(f"Email scheduled for {schedule_time}")
+
 
 def run_scheduler():
     while True:
@@ -58,6 +63,7 @@ def run_scheduler():
 scheduler_thread = threading.Thread(target=run_scheduler)
 scheduler_thread.daemon = True
 scheduler_thread.start()
+
 
 @app.route("/schedule-email", methods=["POST"])
 def schedule_email_route():
@@ -71,7 +77,6 @@ def schedule_email_route():
     if not all([to_email, subject, body, schedule_time]):
         return jsonify({"error": "Missing required fields"}), 400
 
-
     with emails_lock:
         email_id = email_id_counter
         email_id_counter += 1
@@ -81,17 +86,21 @@ def schedule_email_route():
             "subject": subject,
             "body": body,
             "schedule_time": schedule_time,
-            "status": "scheduled", 
+            "status": "scheduled",
         }
         scheduled_emails.append(email_data)
 
     schedule_email(to_email, subject, body, schedule_time, email_id)
-    return jsonify({"message": "Email scheduled successfully", "email_id": email_id}), 200
+    return jsonify(
+        {"message": "Email scheduled successfully", "email_id": email_id}
+    ), 200
+
 
 @app.route("/get-scheduled-emails", methods=["GET"])
 def get_scheduled_emails():
     with emails_lock:
         return jsonify(scheduled_emails), 200
+
 
 @app.route("/cancel-email/<int:email_id>", methods=["POST"])
 def cancel_email(email_id):
@@ -102,12 +111,17 @@ def cancel_email(email_id):
                 return jsonify({"message": "Email cancelled successfully"}), 200
     return jsonify({"error": "Email not found"}), 404
 
+
 @app.route("/remove-email/<int:email_id>", methods=["POST"])
 def remove_email(email_id):
     global scheduled_emails
     with emails_lock:
-        scheduled_emails = [email for email in scheduled_emails if email["id"] != email_id]
+        scheduled_emails = [
+            email for email in scheduled_emails if email["id"] != email_id
+        ]
     return jsonify({"message": "Email removed successfully"}), 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)
+

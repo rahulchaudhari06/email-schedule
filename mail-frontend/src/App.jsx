@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 
+
 function App() {
   const [toEmail, setToEmail] = useState("");
   const [subject, setSubject] = useState("");
@@ -81,101 +82,107 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mb-8">
-        <h1 className="text-2xl font-bold mb-6 text-center">Schedule Email</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">To Email</label>
-            <input
-              type="email"
-              value={toEmail}
-              onChange={(e) => setToEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Subject</label>
-            <input
-              type="text"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Body</label>
-            <textarea
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Schedule Time (HH:MM)</label>
-            <input
-              type="text"
-              value={scheduleTime}
-              onChange={(e) => setScheduleTime(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg"
-              placeholder="e.g., 14:30"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
-          >
-            Schedule Email
-          </button>
-        </form>
-      </div>
 
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
-        <h2 className="text-2xl font-bold mb-6 text-center">Scheduled Emails</h2>
-        <div className="space-y-4">
-          {scheduledEmails.map((email) => (
-            <div
-              key={email.id}
-              className={`p-4 border rounded-lg ${
-                email.status === "sent" ? "bg-green-50" : "bg-white"
-              }`}
-            >
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="font-semibold">To: {email.to_email}</p>
-                  <p>Subject: {email.subject}</p>
-                  <p>Time: {email.schedule_time}</p>
-                  <p className={` ${
-                email.status === "sent" ? "bg-green-50 text-green-500 text-lg" : "bg-white text-yellow-500 text-lg "
-              }`} >Status: {email.status}</p>
-                </div>
-                <div className="space-x-2">
-                  {email.status === "scheduled" && (
-                    <button
-                      onClick={() => handleCancel(email.id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
-                    >
-                      Cancel
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleRemove(email.id)}
-                    className="bg-gray-500 text-white px-3 py-1 rounded-lg hover:bg-gray-600"
-                  >
-                    Remove
-                  </button>
-                </div>
+
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 relative z-10 ">
+          <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mb-8 drop-shadow-lg border-2 border-gray-300">
+            <h1 className="text-2xl font-bold mb-6 text-center">Schedule Email</h1>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">To Email</label>
+                <input
+                  type="email"
+                  value={toEmail}
+                  onChange={(e) => setToEmail(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-lg"
+                  required
+                />
               </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Subject</label>
+                <input
+                  type="text"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-lg"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Body</label>
+                <textarea
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-lg"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-2">Schedule Time (HH:MM)</label>
+                <input
+                  type="text"
+                  value={scheduleTime}
+                  onChange={(e) => setScheduleTime(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-lg"
+                  placeholder="e.g., 14:30"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+              >
+                Schedule Email
+              </button>
+            </form>
+          </div>
+    
+          <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl border-2 border-gray-300">
+            <h2 className="text-2xl font-bold mb-6 text-center">Scheduled Emails</h2>
+            <div className="space-y-4">
+              {scheduledEmails.map((email) => (
+                <div
+                  key={email.id}
+                  className={`p-4 border rounded-lg ${
+                    email.status === "sent" ? "bg-green-50" : "bg-white"
+                  }`}
+                >
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="font-semibold">To: {email.to_email}</p>
+                      <p>Subject: {email.subject}</p>
+                      <p>Time: {email.schedule_time}</p>
+                      <p className={` ${
+                    email.status === "sent" ? "bg-green-50 text-green-500 text-lg" : "bg-white text-yellow-500 text-lg "
+                  }`} >Status: {email.status}</p>
+                    </div>
+                    <div className="space-x-2">
+                      {email.status === "scheduled" && (
+                        <button
+                          onClick={() => handleCancel(email.id)}
+                          className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleRemove(email.id)}
+                        className="bg-gray-500 text-white px-3 py-1 rounded-lg hover:bg-gray-600"
+                        >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </div>
-    </div>
-  );
+
+
+  )
+
+  
 }
 
 export default App;
